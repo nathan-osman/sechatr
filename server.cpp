@@ -25,5 +25,33 @@
 #include "server.h"
 
 Server::Server()
+    : mServer("", QWebSocketServer::NonSecureMode)
 {
+    connect(&mServer, &QWebSocketServer::newConnection, this, &Server::onNewConnection);
+}
+
+Server::~Server()
+{
+}
+
+bool Server::listen(const QHostAddress &address, quint16 port)
+{
+    return mServer.listen(address, port);
+}
+
+void Server::onNewConnection()
+{
+}
+
+void Server::onTextMessageReceived(const QString &message)
+{
+}
+
+void Server::onDisconnected()
+{
+}
+
+Server::Client *Server::findUser(int roomId, int userId)
+{
+    return nullptr;
 }

@@ -25,7 +25,12 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <QHostAddress>
+#include <QList>
+#include <QMap>
 #include <QObject>
+#include <QWebSocket>
+#include <QWebSocketServer>
 
 class Server : public QObject
 {
@@ -34,6 +39,32 @@ class Server : public QObject
 public:
 
     Server();
+    virtual ~Server();
+
+    bool listen(const QHostAddress &address, quint16 port);
+
+private slots:
+
+    void onNewConnection();
+    void onTextMessageReceived(const QString &message);
+    void onDisconnected();
+
+private:
+
+    struct Client
+    {
+        QWebSocket *socket;
+        int roomId;
+        int userId;
+        bool active;
+        int lastMessageRead;
+        int lastCharEntered;
+    };
+
+    Client *findUser(int roomId, int userId);
+
+    QWebSocketServer mServer;
+    QMap<int, QList<Client*>> mClients;
 };
 
 #endif // SERVER_H
