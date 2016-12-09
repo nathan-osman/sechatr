@@ -22,35 +22,24 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef WEBSOCKETSERVER_H
+#define WEBSOCKETSERVER_H
 
 #include <QHostAddress>
 #include <QList>
 #include <QMap>
 #include <QObject>
+#include <QUrl>
 #include <QWebSocket>
 #include <QWebSocketServer>
 
-class Server : public QObject
+class WebSocketServer : public QObject
 {
     Q_OBJECT
 
-public:
-
-    Server();
-    virtual ~Server();
-
-    bool listen(const QHostAddress &address, quint16 port);
-
-private slots:
-
-    void onNewConnection();
-    void onTextMessageReceived(const QString &message);
-    void onDisconnected();
-
 private:
 
+    // Store information for each connected client
     struct Client
     {
         QWebSocket *socket;
@@ -60,11 +49,27 @@ private:
         int lastMessageRead;
         int lastCharEntered;
     };
+    typedef QList<Client*> ClientList;
 
-    Client *findUser(int roomId, int userId);
+public:
+
+    WebSocketServer();
+    virtual ~WebSocketServer();
+
+    bool listen(const QHostAddress &address, quint16 port);
+
+private slots:
+
+    void onNewConnection();
+
+private:
+
+    bool parseRequestUrl(const QUrl &url, int &roomId, int &userId);
+    void processMessage(Client *client, const QString &message);
+    void processDisconnect(Client *client);
 
     QWebSocketServer mServer;
-    QMap<int, QList<Client*>> mClients;
+    QMap<int, ClientList*> mClients;
 };
 
-#endif // SERVER_H
+#endif // WEBSOCKETSERVER_H
