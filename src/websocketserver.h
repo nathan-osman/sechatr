@@ -30,6 +30,7 @@
 #include <QMap>
 #include <QObject>
 #include <QUrl>
+#include <QVariant>
 #include <QWebSocket>
 #include <QWebSocketServer>
 
@@ -64,6 +65,7 @@ private slots:
 
 private:
 
+    QByteArray createPacket(const QString &type, int userId, int value = 0);
     bool parseRequestUrl(const QUrl &url, int &roomId, int &userId);
     void processMessage(Client *client, const QString &message);
     void processDisconnect(Client *client);

@@ -36,6 +36,16 @@ WebSocketServer::WebSocketServer()
 
 WebSocketServer::~WebSocketServer()
 {
+    // TODO: graceful shutdown
+
+    // Delete the clients in each room and finally the room
+    foreach (int roomId, mClients.keys()) {
+        foreach (Client *client, *mClients.value(roomId)) {
+            client->socket->deleteLater();
+            delete client;
+        }
+        delete mClients.value(roomId);
+    }
 }
 
 bool WebSocketServer::listen(const QHostAddress &address, quint16 port)
@@ -71,11 +81,30 @@ void WebSocketServer::onNewConnection()
         processDisconnect(client);
     });
 
-    // Add the client to the appropriate room in the map
+    // If the room is empty, add the new client; otherwise, broadcast data for
+    // everyone else in the room
     if (!mClients.contains(roomId)) {
         mClients.insert(roomId, new ClientList);
+    } else {
+        foreach (Client *peer, *mClients.value(roomId)) {
+            peer->socket->sendTextMessage(createPacket("active", peer->userId, peer->active));
+            peer->socket->sendTextMessage(createPacket("position", peer->userId, peer->lastMessageRead));
+            peer->socket->sendTextMessage(createPacket("typing", peer->userId, peer->lastCharEntered));
+        }
     }
+
+    // Add the new client
     mClients.value(roomId)->append(client);
+}
+
+QByteArray WebSocketServer::createPacket(const QString &type, int userId, int value)
+{
+    QJsonObject object{
+        {"type", type},
+        {"user_id", userId},
+        {"value", value}
+    };
+    return QJsonDocument(object).toJson();
 }
 
 bool WebSocketServer::parseRequestUrl(const QUrl &url, int &roomId, int &userId)
@@ -129,15 +158,8 @@ void WebSocketServer::processDisconnect(Client *client)
     if (!mClients.value(client->roomId)->count()) {
         delete mClients.take(client->roomId);
     }
-
-    // Create a quit message for everyone else
-    QJsonObject object{
-        {"type", "quit"},
-        {"user_id", client->userId}
-    };
-    QByteArray message(QJsonDocument(object).toJson());
-
     // Broadcast it to the room
+    QByteArray message = createPacket("quit", client->userId);
     foreach (Client *peer, *mClients.value(client->roomId)) {
         peer->socket->sendTextMessage(message);
     }
