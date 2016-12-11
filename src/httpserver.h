@@ -33,17 +33,25 @@
 #include <QHttpEngine/QHttpSocket>
 #include <QHttpEngine/QObjectHandler>
 
+#include "coordinator.h"
+
 class HttpServer : public QObject
 {
     Q_OBJECT
 
 public:
 
-    HttpServer();
+    explicit HttpServer(Coordinator *coordinator);
 
     bool listen(const QHostAddress &address, quint16 port);
 
+private slots:
+
+    void onStats(QHttpSocket *socket);
+
 private:
+
+    Coordinator *mCoordinator;
 
     QHttpServer mServer;
     QFilesystemHandler mFilesystemHandler;

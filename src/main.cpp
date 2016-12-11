@@ -24,15 +24,25 @@
 
 #include <QCoreApplication>
 
+#include "coordinator.h"
+#include "httpserver.h"
 #include "websocketserver.h"
 
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
 
-    WebSocketServer webSocketServer;
-    if (!webSocketServer.listen(QHostAddress::Any, 8000)) {
+    Coordinator coordinator;
+
+    HttpServer httpServer(&coordinator);
+    if (!httpServer.listen(QHostAddress::Any, 8000)) {
         qCritical("Unable to listen on port 8000");
+        return 1;
+    }
+
+    WebSocketServer webSocketServer(&coordinator);
+    if (!webSocketServer.listen(QHostAddress::Any, 8080)) {
+        qCritical("Unable to listen on port 8080");
         return 1;
     }
 

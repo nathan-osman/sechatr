@@ -22,16 +22,20 @@
  * IN THE SOFTWARE.
  */
 
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QRegExp>
-
-#include <QHttpEngine/QHttpHandler>
 
 #include "httpserver.h"
 
-HttpServer::HttpServer()
+HttpServer::HttpServer(Coordinator *coordinator)
+    : mCoordinator(coordinator)
 {
     mFilesystemHandler.setDocumentRoot(":");
+    mFilesystemHandler.addRedirect(QRegExp("^$"), "/static/index.html");
     mFilesystemHandler.addSubHandler(QRegExp("^api/"), &mApiHandler);
+
+    mApiHandler.registerMethod("stats", this, &HttpServer::onStats);
 
     mServer.setHandler(&mFilesystemHandler);
 }
@@ -39,4 +43,14 @@ HttpServer::HttpServer()
 bool HttpServer::listen(const QHostAddress &address, quint16 port)
 {
     return mServer.listen(address, port);
+}
+
+void HttpServer::onStats(QHttpSocket *socket)
+{
+    QJsonObject object{
+        {"num_rooms", mCoordinator->count()},
+        {"num_users", 0},
+    };
+
+    socket->writeJson(QJsonDocument(object));
 }
