@@ -1,5 +1,30 @@
 <RCC>
     <qresource prefix="/">
         <file>static/index.html</file>
+        <file>static/css/bootstrap.min.css</file>
+        <file>static/css/font-awesome.min.css</file>
+        <file>static/css/landing-page.min.css</file>
+        <file>static/css/particles.min.css</file>
+        <file>static/fonts/fontawesome-webfont.eot</file>
+        <file>static/fonts/fontawesome-webfont.svg</file>
+        <file>static/fonts/fontawesome-webfont.ttf</file>
+        <file>static/fonts/fontawesome-webfont.woff</file>
+        <file>static/fonts/fontawesome-webfont.woff2</file>
+        <file>static/fonts/glyphicons-halflings-regular.eot</file>
+        <file>static/fonts/glyphicons-halflings-regular.svg</file>
+        <file>static/fonts/glyphicons-halflings-regular.ttf</file>
+        <file>static/fonts/glyphicons-halflings-regular.woff</file>
+        <file>static/fonts/glyphicons-halflings-regular.woff2</file>
+        <file>static/js/particles/lib/stats.js</file>
+        <file>static/js/particles/app.js</file>
+        <file>static/js/particles/particles.js</file>
+        <file>static/js/particles/particles.json</file>
+        <file>static/js/bootstrap.min.js</file>
+        <file>static/js/chatstatus.js</file>
+        <file>static/js/chatstatus.user.js</file>
+        <file>static/js/jquery.livequery.min.js</file>
+        <file>static/js/jquery.min.js</file>
+        <file>static/videos/gears.mp4</file>
+        <file>static/videos/gears.webm</file>
     </qresource>
 </RCC>
