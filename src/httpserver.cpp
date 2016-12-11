@@ -22,13 +22,21 @@
  * IN THE SOFTWARE.
  */
 
+#include <QRegExp>
+
+#include <QHttpEngine/QHttpHandler>
+
 #include "httpserver.h"
 
 HttpServer::HttpServer()
 {
+    mFilesystemHandler.setDocumentRoot(":");
+    mFilesystemHandler.addSubHandler(QRegExp("^api/"), &mApiHandler);
+
+    mServer.setHandler(&mFilesystemHandler);
 }
 
 bool HttpServer::listen(const QHostAddress &address, quint16 port)
 {
-    return false;
+    return mServer.listen(address, port);
 }

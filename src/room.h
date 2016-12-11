@@ -39,10 +39,12 @@ class Room : public QObject, public QList<Client*>
 
 public:
 
-    Room(int roomId);
+    explicit Room(int roomId);
     virtual ~Room();
 
     void addClient(Client *client);
+
+    int roomId() const;
 
 signals:
 

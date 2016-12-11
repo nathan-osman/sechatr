@@ -24,8 +24,17 @@
 
 #include <QCoreApplication>
 
+#include "websocketserver.h"
+
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+
+    WebSocketServer webSocketServer;
+    if (!webSocketServer.listen(QHostAddress::Any, 8000)) {
+        qCritical("Unable to listen on port 8000");
+        return 1;
+    }
+
     return app.exec();
 }

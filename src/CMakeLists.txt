@@ -1,8 +1,11 @@
 set(SRC
-    resources.qrc
+    client.cpp
+    coordinator.cpp
     httpserver.cpp
+    room.cpp
     websocketserver.cpp
     main.cpp
+    resources.qrc
 )
 
 add_executable(sechatr ${SRC})

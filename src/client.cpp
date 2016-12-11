@@ -43,11 +43,11 @@ Client::~Client()
     mSocket->deleteLater();
 }
 
-void Client::sendMessage(Type type, int value)
+void Client::sendMessage(Type type, int userId, int value)
 {
     QJsonObject object{
         {"type", typeToString(type)},
-        {"user_id", mUserId},
+        {"user_id", userId},
         {"value", value}
     };
     mSocket->sendTextMessage(QJsonDocument(object).toJson());

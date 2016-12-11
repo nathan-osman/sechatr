@@ -49,7 +49,7 @@ public:
     Client(QWebSocket *socket, int userId);
     virtual ~Client();
 
-    void sendMessage(Type type, int value = 0);
+    void sendMessage(Type type, int userId = 0, int value = 0);
 
     int userId() const;
     bool isActive() const;

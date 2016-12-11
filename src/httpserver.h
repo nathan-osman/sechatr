@@ -30,6 +30,7 @@
 
 #include <QHttpEngine/QFilesystemHandler>
 #include <QHttpEngine/QHttpServer>
+#include <QHttpEngine/QHttpSocket>
 #include <QHttpEngine/QObjectHandler>
 
 class HttpServer : public QObject
