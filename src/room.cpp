@@ -63,7 +63,7 @@ void Room::onMessageReceived(Client::Type type, int value)
     // Broadcast the message to the rest of the room
     for (auto i = constBegin(); i != constEnd(); ++i) {
         if (*i != client) {
-            (*i)->sendMessage(type, value);
+            (*i)->sendMessage(type, client->userId(), value);
         }
     }
 }
