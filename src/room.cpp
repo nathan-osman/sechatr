@@ -43,6 +43,10 @@ void Room::addClient(Client *client)
         client->sendMessage(Client::Typing, (*i)->userId(), (*i)->lastCharEntered());
     }
 
+    // Connect to the client's signals
+    connect(client, &Client::messageReceived, this, &Room::onMessageReceived);
+    connect(client, &Client::disconnected, this, &Room::onDisconnected);
+
     // Add the new client to the room
     append(client);
 }
