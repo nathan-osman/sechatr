@@ -21,7 +21,7 @@ RUN \
     make install
 
 # Set the command for running the application
-ENTRYPOINT sechatr
+CMD sechatr
 
 # Expose the two ports that the application uses
 EXPOSE 8000
