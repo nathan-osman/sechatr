@@ -22,6 +22,8 @@
  * IN THE SOFTWARE.
  */
 
+#include <QCommandLineOption>
+#include <QCommandLineParser>
 #include <QCoreApplication>
 
 #include "coordinator.h"
@@ -31,18 +33,41 @@
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
-
     Coordinator coordinator;
 
+    // Create options for the application
+    QCommandLineOption httpAddrOption("http-addr", "address for HTTP server", "address", "0.0.0.0");
+    QCommandLineOption httpPortOption("http-port", "port for HTTP server", "port", "8000");
+    QCommandLineOption webSocketAddrOption("websocket-addr", "address for websocket server", "address", "0.0.0.0");
+    QCommandLineOption webSocketPortOption("websocket-port", "port for websocket server", "port", "8001");
+
+    // Create the command-line parser and add the options
+    QCommandLineParser parser;
+    parser.addOption(httpAddrOption);
+    parser.addOption(httpPortOption);
+    parser.addOption(webSocketAddrOption);
+    parser.addOption(webSocketPortOption);
+    parser.addHelpOption();
+
+    // Parse the options
+    if (!parser.parse(app.arguments())) {
+        app.exit(1);
+    }
+
+    // Process the help option if used
+    if (parser.isSet("help")) {
+        parser.showHelp();
+    }
+
     HttpServer httpServer(&coordinator);
-    if (!httpServer.listen(QHostAddress::Any, 8000)) {
-        qCritical("Unable to listen on port 8000");
+    if (!httpServer.listen(QHostAddress(parser.value(httpAddrOption)), parser.value(httpPortOption).toInt())) {
+        qCritical("Unable to listen on port %d", parser.value(httpPortOption).toInt());
         return 1;
     }
 
     WebSocketServer webSocketServer(&coordinator);
-    if (!webSocketServer.listen(QHostAddress::Any, 8080)) {
-        qCritical("Unable to listen on port 8080");
+    if (!webSocketServer.listen(QHostAddress(parser.value(webSocketAddrOption)), parser.value(webSocketPortOption).toInt())) {
+        qCritical("Unable to listen on port %d", parser.value(webSocketPortOption).toInt());
         return 1;
     }
 
