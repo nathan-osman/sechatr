@@ -421,7 +421,7 @@
         var script = document.createElement('script'),
             server = preferences.get('server');
         script.type = 'text/javascript';
-        script.src = 'https://' + server + '/js/jquery.livequery.min.js';
+        script.src = 'https://' + server + '/static/js/jquery.livequery.min.js';
         script.onerror = function() {
             notify("Unable to load liveQuery from <strong>" + server + "</strong>.");
         };
