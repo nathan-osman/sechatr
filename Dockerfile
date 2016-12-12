@@ -11,7 +11,7 @@ RUN \
 
 # Copy the source code to the container
 COPY CMakeLists.txt /root/
-COPY src/ /root/
+COPY src /root/src
 
 # Configure and build the project
 RUN \
