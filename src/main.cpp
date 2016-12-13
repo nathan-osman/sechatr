@@ -25,6 +25,7 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QObject>
 
 #include "coordinator.h"
 #include "httpserver.h"
@@ -36,17 +37,13 @@ int main(int argc, char **argv)
     Coordinator coordinator;
 
     // Create options for the application
-    QCommandLineOption httpAddrOption("http-addr", "address for HTTP server", "address", "0.0.0.0");
-    QCommandLineOption httpPortOption("http-port", "port for HTTP server", "port", "8000");
-    QCommandLineOption webSocketAddrOption("websocket-addr", "address for websocket server", "address", "0.0.0.0");
-    QCommandLineOption webSocketPortOption("websocket-port", "port for websocket server", "port", "8001");
+    QCommandLineOption addrOption("addr", "address for HTTP server", "address", "0.0.0.0");
+    QCommandLineOption portOption("port", "port for HTTP server", "port", "8000");
 
     // Create the command-line parser and add the options
     QCommandLineParser parser;
-    parser.addOption(httpAddrOption);
-    parser.addOption(httpPortOption);
-    parser.addOption(webSocketAddrOption);
-    parser.addOption(webSocketPortOption);
+    parser.addOption(addrOption);
+    parser.addOption(portOption);
     parser.addHelpOption();
 
     // Parse the options
@@ -59,15 +56,17 @@ int main(int argc, char **argv)
         parser.showHelp();
     }
 
-    HttpServer httpServer(&coordinator);
-    if (!httpServer.listen(QHostAddress(parser.value(httpAddrOption)), parser.value(httpPortOption).toInt())) {
-        qCritical("Unable to listen on port %d", parser.value(httpPortOption).toInt());
+    // Create the local WebSocket server
+    WebSocketServer webSocketServer(&coordinator);
+    if (!webSocketServer.listen()) {
+        qCritical("Unable to find an empty port");
         return 1;
     }
 
-    WebSocketServer webSocketServer(&coordinator);
-    if (!webSocketServer.listen(QHostAddress(parser.value(webSocketAddrOption)), parser.value(webSocketPortOption).toInt())) {
-        qCritical("Unable to listen on port %d", parser.value(webSocketPortOption).toInt());
+    // Create the HTTP server
+    HttpServer httpServer(&coordinator, webSocketServer.serverPort());
+    if (!httpServer.listen(QHostAddress(parser.value(addrOption)), parser.value(portOption).toInt())) {
+        qCritical("Unable to listen on port %d", parser.value(portOption).toInt());
         return 1;
     }
 

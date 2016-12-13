@@ -39,7 +39,8 @@ public:
 
     explicit WebSocketServer(Coordinator *coordinator);
 
-    bool listen(const QHostAddress &address, quint16 port);
+    bool listen();
+    quint16 serverPort() const;
 
 private slots:
 

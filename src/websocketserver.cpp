@@ -34,9 +34,14 @@ WebSocketServer::WebSocketServer(Coordinator *coordinator)
     connect(&mServer, &QWebSocketServer::newConnection, this, &WebSocketServer::onNewConnection);
 }
 
-bool WebSocketServer::listen(const QHostAddress &address, quint16 port)
+bool WebSocketServer::listen()
 {
-    return mServer.listen(address, port);
+    return mServer.listen(QHostAddress::LocalHost);
+}
+
+quint16 WebSocketServer::serverPort() const
+{
+    return mServer.serverPort();
 }
 
 void WebSocketServer::onNewConnection()

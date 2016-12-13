@@ -2,7 +2,6 @@ set(SRC
     client.cpp
     coordinator.cpp
     httpserver.cpp
-    proxy.cpp
     room.cpp
     websocketserver.cpp
     main.cpp

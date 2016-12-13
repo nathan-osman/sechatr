@@ -28,12 +28,17 @@
 
 #include "httpserver.h"
 
-HttpServer::HttpServer(Coordinator *coordinator)
-    : mCoordinator(coordinator)
+HttpServer::HttpServer(Coordinator *coordinator, quint16 webSocketPort)
+    : mCoordinator(coordinator),
+      mWebSocketProxy(QHostAddress::LocalHost, webSocketPort)
 {
     mFilesystemHandler.setDocumentRoot(":");
     mFilesystemHandler.addRedirect(QRegExp("^$"), "/static/index.html");
     mFilesystemHandler.addSubHandler(QRegExp("^api/"), &mApiHandler);
+    mFilesystemHandler.addSubHandler(QRegExp("^api/connect/"), &mWebSocketProxy);
+
+    // TODO: legacy redirect; remove after a while
+    mFilesystemHandler.addRedirect(QRegExp("^js/chatstatus.js"), "/static/js/chatstatus.js");
 
     mApiHandler.registerMethod("stats", this, &HttpServer::onStats);
 

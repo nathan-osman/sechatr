@@ -32,6 +32,7 @@
 #include <QHttpEngine/QHttpServer>
 #include <QHttpEngine/QHttpSocket>
 #include <QHttpEngine/QObjectHandler>
+#include <QHttpEngine/QProxyHandler>
 
 #include "coordinator.h"
 
@@ -41,7 +42,7 @@ class HttpServer : public QObject
 
 public:
 
-    explicit HttpServer(Coordinator *coordinator);
+    HttpServer(Coordinator *coordinator, quint16 webSocketPort);
 
     bool listen(const QHostAddress &address, quint16 port);
 
@@ -56,6 +57,7 @@ private:
     QHttpServer mServer;
     QFilesystemHandler mFilesystemHandler;
     QObjectHandler mApiHandler;
+    QProxyHandler mWebSocketProxy;
 };
 
 #endif // HTTPSERVER_H
