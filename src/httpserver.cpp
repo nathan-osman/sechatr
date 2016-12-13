@@ -35,7 +35,7 @@ HttpServer::HttpServer(Coordinator *coordinator, quint16 webSocketPort)
     mFilesystemHandler.setDocumentRoot(":");
     mFilesystemHandler.addRedirect(QRegExp("^$"), "/static/index.html");
     mFilesystemHandler.addSubHandler(QRegExp("^api/"), &mApiHandler);
-    mFilesystemHandler.addSubHandler(QRegExp("^api/connect/"), &mWebSocketProxy);
+    mFilesystemHandler.addSubHandler(QRegExp("^ws/"), &mWebSocketProxy);
 
     // TODO: legacy redirect; remove after a while
     mFilesystemHandler.addRedirect(QRegExp("^js/chatstatus.js"), "/static/js/chatstatus.js");

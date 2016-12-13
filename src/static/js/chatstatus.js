@@ -355,7 +355,7 @@
         function connect() {
             log("connecting to " + server);
             socket = new WebSocket(
-                'wss://' + server + '/api/connect/' +
+                'wss://' + server + '/ws/' +
                 CHAT.CURRENT_ROOM_ID + '/' + CHAT.CURRENT_USER_ID
             );
             socket.onopen = function() {
