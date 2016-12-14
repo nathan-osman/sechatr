@@ -60,11 +60,9 @@ void Room::onMessageReceived(Client::Type type, int value)
 {
     Client *client = qobject_cast<Client*>(sender());
 
-    // Broadcast the message to the rest of the room
+    // Broadcast the message to the room
     for (auto i = constBegin(); i != constEnd(); ++i) {
-        if (*i != client) {
-            (*i)->sendMessage(type, client->userId(), value);
-        }
+        (*i)->sendMessage(type, client->userId(), value);
     }
 }
 

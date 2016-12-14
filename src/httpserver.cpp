@@ -25,6 +25,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QRegExp>
+#include <QSet>
 
 #include "httpserver.h"
 
@@ -52,9 +53,17 @@ bool HttpServer::listen(const QHostAddress &address, quint16 port)
 
 void HttpServer::onStats(QHttpSocket *socket)
 {
+    QSet<int> userIds;
+
+    for (auto i = mCoordinator->constBegin(); i != mCoordinator->constEnd(); ++i) {
+        for (auto j = (*i)->constBegin(); j < (*i)->constEnd(); ++j) {
+            userIds.insert((*j)->userId());
+        }
+    }
+
     QJsonObject object{
         {"num_rooms", mCoordinator->count()},
-        {"num_users", 0},
+        {"num_users", userIds.count()},
     };
 
     socket->writeJson(QJsonDocument(object));
