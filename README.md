@@ -6,9 +6,24 @@ Unfortunately, for various technical reasons, the program started running into s
 
 ### Building
 
-Because the application uses CMake, building it is quite straightforward:
+The application requires the following:
+
+- C++ compiler with C++11 support
+- CMake 3.2+
+- Qt 5.4+
+- [QHttpEngine](https://github.com/nitroshare/qhttpengine) *
+
+Note that QHttpEngine 1.0.0 has not been released yet. You will need to build it from master.
+
+Because the application uses CMake, building sechatr is quite straightforward:
 
     mkdir build
     cd build
     cmake ..
     make
+
+### Running in Docker
+
+It is probably simpler to use Docker to build and run the application. Assuming Docker is installed, you can simple run:
+
+docker build -t sechatr .
