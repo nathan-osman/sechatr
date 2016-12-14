@@ -36,6 +36,8 @@ void Coordinator::addClient(Client *client, int roomId)
     // If the room does not exist, create it
     if (!room) {
         room = new Room(roomId);
+        connect(room, &Room::roomEmptied, this, &Coordinator::onRoomEmptied);
+
         insert(roomId, room);
     }
 
