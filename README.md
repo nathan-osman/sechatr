@@ -28,4 +28,4 @@ Because the application uses CMake, building sechatr is quite straightforward:
 
 It is probably simpler to use Docker to build and run the application. Assuming Docker is installed, you can simple run:
 
-docker build -t sechatr .
+    docker build -t sechatr .
