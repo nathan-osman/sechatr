@@ -23,6 +23,5 @@ RUN \
 # Set the command for running the application
 CMD sechatr
 
-# Expose the two ports that the application uses
+# Expose the port that the application uses
 EXPOSE 8000
-EXPOSE 8001
