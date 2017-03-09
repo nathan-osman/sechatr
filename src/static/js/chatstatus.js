@@ -168,12 +168,16 @@
          */
         var after = $.fn.after;
         $.fn.after = function(e) {
-            var $container = $([]);
-            if ($(e).hasClass('message')) {
-                $container = this.next('.secs-container').detach();
-            }
+            try {
+                var $container = $([]);
+                if ($(e).hasClass('message')) {
+                    $container = this.next('.secs-container').detach();
+                }
+            } catch (err) {}
             var ret = after.apply(this, arguments);
-            $container.insertBefore(e);
+            try {
+                $container.insertBefore(e);
+            } catch(err) {}
             return ret;
         };
 
