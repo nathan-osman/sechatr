@@ -151,7 +151,7 @@
                     .addClass('secs-container')
                     .css('marginLeft', '18px')
                 if ($message.length) {
-                    $message.after($container);
+                    $message.messageAfter($container);
                 } else {
                     pendingContainers[messageId] = $container;
                 }
@@ -166,13 +166,12 @@
          * jQuery.insertAfter() and manually moving our container around. Yes,
          * it's a really nasty hack. Yes, it works.
          */
-        var after = $.fn.after;
-        $.fn.after = function(e) {
+        $.fn.messageAfter = function(e) {
             var $container = $([]);
             if ($(e).hasClass('message')) {
                 $container = this.next('.secs-container').detach();
             }
-            var ret = after.apply(this, arguments);
+            var ret = $.fn.after.apply(this, arguments);
             $container.insertBefore(e);
             return ret;
         };
