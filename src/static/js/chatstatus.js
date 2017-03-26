@@ -1,6 +1,6 @@
 /**
  * Stack Exchange Chat Status
- * Copyright 2015 - Nathan Osman
+ * Copyright 2017 - Nathan Osman
  */
 
 (function() {
@@ -45,6 +45,28 @@
                 lastCall = t;
             }
         };
+    }
+
+    /**
+     * Find all of the text nodes in the specified element
+     *
+     * Adapted from http://stackoverflow.com/a/4399718/193619.
+     */
+    function getTextNodesIn(node) {
+        var textNodes = [], nonWhitespaceMatcher = /\S/;
+        function getTextNodes(node) {
+            if (node.nodeType == 3) {
+                if (nonWhitespaceMatcher.test(node.nodeValue)) {
+                    textNodes.push(node);
+                }
+            } else {
+                for (var i = 0, len = node.childNodes.length; i < len; ++i) {
+                    getTextNodes(node.childNodes[i]);
+                }
+            }
+        }
+        getTextNodes(node);
+        return textNodes;
     }
 
     /**
@@ -117,6 +139,74 @@
             return function(msg) {
                 debugMessages && console.log("[" + class_ + "] " + msg);
             };
+        };
+    }
+
+    /**
+     * Replace ASCII emojis with their image equivalents
+     */
+    function EmojiReplacer(preferences) {
+
+        /**
+         * Emoji regexp
+         *
+         * Regexp to match against all recognized emojis.
+         */
+        var emojiRegexp = /(\s|^)(\(-?[:;]|;-?[)p]|:-?[)|dop])(?=\s|$)/i;
+
+        /**
+         * Emoji map
+         *
+         * All valid emojis are listed in this map. The value for each key is the
+         * image that should be used to replace it. Note that the '-' characters
+         * are removed to normalize the strings a bit.
+         */
+        var emojiMap = {
+            '(;': 'wink',
+            ';)': 'wink',
+            ';P': 'tongue',
+            ';p': 'tongue',
+            '(:': 'smile',
+            ':)': 'smile',
+            ':|': 'neutral',
+            ':D': 'grin',
+            ':O': 'shock',
+            ':o': 'shock',
+            ':P': 'tongue',
+            ':p': 'tongue',
+        };
+
+        /**
+         * Replace the emojis in the specified element with images
+         */
+        this.replaceEmojis = function(root) {
+            $.each(getTextNodesIn(root), function() {
+                var $this = $(this),
+                    text = $this.text(),
+                    $new = $('<span>'),
+                    replaced = false,
+                    m;
+                while (m = emojiRegexp.exec(text)) {
+                    var emoji = m[2];
+                    if (emoji in emojiMap) {
+                        m.index += m[1].length
+                        $new.append(text.substring(0, m.index));
+                        $new.append($('<img>').attr('src',
+                            'https://' +
+                            preferences.get('server') +
+                            '/static/img/' +
+                            emojiMap[emoji] +
+                            '.png'
+                        ).css({margin: '-2px auto'}));
+                        text = text.substring(m.index + m[2].length);
+                        replaced = true;
+                    }
+                }
+                if (replaced) {
+                    $new.append(text);
+                    $this.replaceWith($new);
+                }
+            });
         };
     }
 
@@ -570,6 +660,7 @@
 
     var preferences = new Preferences(),
         logFactory = new LogFactory(preferences),
+        emojiReplacer = new EmojiReplacer(preferences),
         userManager = new UserManager(),
         socket = new Socket(preferences, logFactory);
         ui = new UI(preferences, logFactory),
