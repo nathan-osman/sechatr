@@ -479,7 +479,7 @@
     /**
      * Provides a set of methods and callbacks for interacting with the page.
      */
-    function UI(preferences, logFactory) {
+    function UI(preferences, logFactory, emojiReplacer) {
 
         var self = this,
             log = logFactory.create('UI');
@@ -525,6 +525,7 @@
                 window.setTimeout(function() {
                     var firstMessages = true;
                     $('.message').livequery(function() {
+                        emojiReplacer.replaceEmojis($('.content', this).get(0));
                         if (!firstMessages) {
                             processMessage(this);
                         }
@@ -663,7 +664,7 @@
         emojiReplacer = new EmojiReplacer(preferences),
         userManager = new UserManager(),
         socket = new Socket(preferences, logFactory);
-        ui = new UI(preferences, logFactory),
+        ui = new UI(preferences, logFactory, emojiReplacer),
         preferenceDialog = new PreferenceDialog(preferences);
 
     var showMe = preferences.get('showMe'),
