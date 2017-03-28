@@ -52,7 +52,7 @@
      *
      * Adapted from http://stackoverflow.com/a/4399718/193619.
      */
-    function getTextNodesIn(node) {
+    function getTextNodesIn(root) {
         var textNodes = [], nonWhitespaceMatcher = /\S/;
         function getTextNodes(node) {
             if (node.nodeType == 3) {
@@ -65,7 +65,7 @@
                 }
             }
         }
-        getTextNodes(node);
+        getTextNodes(root);
         return textNodes;
     }
 
@@ -147,20 +147,40 @@
      */
     function EmojiReplacer(preferences) {
 
-        /**
-         * Emoji regexp
-         *
-         * Regexp to match against all recognized emojis.
-         */
+        // List of emojis
+        var emojiList = [
+            {
+                name: 'grin',
+                text: ':D'
+            },
+            {
+                name: 'neutral',
+                text: ':|'
+            },
+            {
+                name: 'shock',
+                text: ':O'
+            },
+            {
+                name: 'smile',
+                text: ':)'
+            },
+            {
+                name: 'tongue',
+                text: ':P'
+            },
+            {
+                name: 'wink',
+                text: ';)'
+            }
+        ];
+
+        // Regexp to match against all recognized emojis
         var emojiRegexp = /(\s|^)(\(-?[:;]|;-?[)p]|:-?[)|dop])(?=\s|$)/i;
 
-        /**
-         * Emoji map
-         *
-         * All valid emojis are listed in this map. The value for each key is the
-         * image that should be used to replace it. Note that the '-' characters
-         * are removed to normalize the strings a bit.
-         */
+        // All valid emojis are listed in this map. The value for each key is
+        // the image that should be used to replace it. Note that the '-'
+        // characters are removed to normalize the strings a bit
         var emojiMap = {
             '(;': 'wink',
             ';)': 'wink',
@@ -175,6 +195,42 @@
             ':P': 'tongue',
             ':p': 'tongue',
         };
+
+        // Retrieve the absolute path to an emoji image
+        function path(i) {
+            return 'https://' + preferences.get('server') +
+                '/static/img/' + i + '.png';
+        }
+
+        // Create a button for inserting emojis
+        var $btn = $('<button>')
+                .addClass('button')
+                .text('emojis')
+                .click(function(e) {
+                    e.preventDefault(),
+                    e.stopPropagation();
+                    var d = popUp(e.pageX, e.pageY);
+                    $('<h2>').text("Emojis").appendTo(d);
+                    $('<hr>').appendTo(d);
+                    $.each(emojiList, function() {
+                        var t = this.text,
+                            $img = $('<img>')
+                                .attr('src', path(this.name))
+                                .attr('title', this.name)
+                                .css('cursor', 'pointer')
+                                .click(function() {
+                                    var i = $('#input').get(0),
+                                        v = i.value,
+                                        s = i.selectionStart,
+                                        e = i.selectionEnd;
+                                    i.value = v.substr(0, s) + t + v.substr(e);
+                                    i.focus();
+                                    d.close();
+                                });
+                        d.append(' ').append($img);
+                    });
+                });
+        $('#chat-buttons').append(' ').append($btn);
 
         /**
          * Replace the emojis in the specified element with images
@@ -191,13 +247,9 @@
                     if (emoji in emojiMap) {
                         m.index += m[1].length
                         $new.append(text.substring(0, m.index));
-                        $new.append($('<img>').attr('src',
-                            'https://' +
-                            preferences.get('server') +
-                            '/static/img/' +
-                            emojiMap[emoji] +
-                            '.png'
-                        ).css({margin: '-2px auto'}));
+                        $new.append($('<img>')
+                            .attr('src', path(emojiMap[emoji]))
+                            .css({margin: '-2px auto'}));
                         text = text.substring(m.index + m[2].length);
                         replaced = true;
                     }
@@ -525,7 +577,10 @@
                 window.setTimeout(function() {
                     var firstMessages = true;
                     $('.message').livequery(function() {
-                        emojiReplacer.replaceEmojis($('.content', this).get(0));
+                        var content = $('.content', this).get(0);
+                        if (content !== undefined) {
+                            emojiReplacer.replaceEmojis(content);
+                        }
                         if (!firstMessages) {
                             processMessage(this);
                         }
