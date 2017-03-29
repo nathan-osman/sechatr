@@ -240,24 +240,22 @@
                 var $this = $(this),
                     text = $this.text(),
                     $new = $('<span>'),
-                    replaced = false,
                     m;
                 while (m = emojiRegexp.exec(text)) {
                     var emoji = m[2];
+                    m.index += m[1].length
+                    $new.append(text.substring(0, m.index));
                     if (emoji in emojiMap) {
-                        m.index += m[1].length
-                        $new.append(text.substring(0, m.index));
                         $new.append($('<img>')
                             .attr('src', path(emojiMap[emoji]))
                             .css({margin: '-2px auto'}));
-                        text = text.substring(m.index + m[2].length);
-                        replaced = true;
+                    } else {
+                        $new.append(emoji);
                     }
+                    text = text.substring(m.index + m[2].length);
                 }
-                if (replaced) {
-                    $new.append(text);
-                    $this.replaceWith($new);
-                }
+                $new.append(text);
+                $this.replaceWith($new);
             });
         };
     }
