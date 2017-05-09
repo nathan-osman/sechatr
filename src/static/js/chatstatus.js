@@ -172,11 +172,27 @@
             {
                 name: 'wink',
                 text: ';)'
+            },
+            {
+                name: 'sad',
+                text: ':('
+            },
+            {
+                name: 'eyeroll',
+                text: 'ಠ_ಠ'
+            },
+            {
+                name: 'astonishment',
+                text: 'O_o'
+            },
+            {
+                name: 'nerd',
+                text: '(⌐■_■)'
             }
         ];
 
         // Regexp to match against all recognized emojis
-        var emojiRegexp = /(\s|^)(\(-?[:;]|;-?[)p]|:-?[)|dop])(?=\s|$)/i;
+        var emojiRegexp = /(\s|^)([(|)]-?[:;]|;-?[)p]|:-?[)|(dop]|ಠ_ಠ|o_o|\(⌐■_■\))(?=\s|$)/i;
 
         // All valid emojis are listed in this map. The value for each key is
         // the image that should be used to replace it. Note that the '-'
@@ -188,19 +204,45 @@
             ';p': 'tongue',
             '(:': 'smile',
             ':)': 'smile',
+            '|:', 'neutral',
             ':|': 'neutral',
+            '):': 'sad',
+            ':(': 'sad',
             ':D': 'grin',
             ':O': 'shock',
             ':o': 'shock',
             ':P': 'tongue',
             ':p': 'tongue',
+
+            // Unicode fun
+            'ಠ_ಠ': 'eyeroll',
+            'o_o': 'astonishment',
+            'O_O': 'astonishment',
+            'O_o': 'astonishment',
+            'o_O': 'astonishment',
+            '(⌐■_■)': 'nerd'
         };
 
-        // Retrieve the absolute path to an emoji image
-        function path(i) {
-            return 'https://' + preferences.get('server') +
-                '/static/img/' + i + '.png';
-        }
+        // Stylesheet for the emojis
+        var emojiCss =
+            '.emoji {' +
+            '  background-image: url(https://' + preferences.get('server') + '/static/img/emojis.png);' +
+            '  background-size: 240px 24px;' +
+            '  height: 24px;' +
+            '  width: 24px;' +
+            '}' +
+            '.emoji.neutral { background-position: 24px 0; }' +
+            '.emoji.shock { background-position: 48px 0; }' +
+            '.emoji.smile { background-position: 72px 0; }' +
+            '.emoji.tongue { background-position: 96px 0; }' +
+            '.emoji.wink { background-position: 120px 0; }' +
+            '.emoji.sad { background-position: 144px 0; }' +
+            '.emoji.eyeroll { background-position: 168px 0; }' +
+            '.emoji.astonishment { background-position: 192px 0; }' +
+            '.emoji.nerd { background-position: 216px 0; }';
+
+        // Inject the stylesheet
+        $('head').append('<script>' + emojiCss + '</script>');
 
         // Create a button for inserting emojis
         var $btn = $('<button>')
@@ -214,8 +256,8 @@
                     $('<hr>').appendTo(d);
                     $.each(emojiList, function() {
                         var t = this.text,
-                            $img = $('<img>')
-                                .attr('src', path(this.name))
+                            $emoji = $('<div>')
+                                .addClass(path(this.name))
                                 .attr('title', this.name)
                                 .css('cursor', 'pointer')
                                 .click(function() {
@@ -227,7 +269,7 @@
                                     i.focus();
                                     d.close();
                                 });
-                        d.append(' ').append($img);
+                        d.append(' ').append($emoji);
                     });
                 });
         $('#chat-buttons').append(' ').append($btn);
