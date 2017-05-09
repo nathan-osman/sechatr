@@ -204,7 +204,7 @@
             ';p': 'tongue',
             '(:': 'smile',
             ':)': 'smile',
-            '|:', 'neutral',
+            '|:': 'neutral',
             ':|': 'neutral',
             '):': 'sad',
             ':(': 'sad',
