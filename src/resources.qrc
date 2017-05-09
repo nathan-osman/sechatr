@@ -15,12 +15,7 @@
         <file>static/fonts/glyphicons-halflings-regular.ttf</file>
         <file>static/fonts/glyphicons-halflings-regular.woff</file>
         <file>static/fonts/glyphicons-halflings-regular.woff2</file>
-        <file>static/img/grin.png</file>
-        <file>static/img/neutral.png</file>
-        <file>static/img/shock.png</file>
-        <file>static/img/smile.png</file>
-        <file>static/img/tongue.png</file>
-        <file>static/img/wink.png</file>
+        <file>static/img/emojis.png</file>
         <file>static/js/particles/lib/stats.js</file>
         <file>static/js/particles/app.js</file>
         <file>static/js/particles/particles.js</file>
