@@ -257,7 +257,7 @@
                     $.each(emojiList, function() {
                         var t = this.text,
                             $emoji = $('<div>')
-                                .addClass(path(this.name))
+                                .addClass(this.name)
                                 .attr('title', this.name)
                                 .css('cursor', 'pointer')
                                 .click(function() {
