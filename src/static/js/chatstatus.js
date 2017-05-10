@@ -242,7 +242,7 @@
             '.emoji.nerd { background-position: 216px 0; }';
 
         // Inject the stylesheet
-        $('head').append('<script>' + emojiCss + '</script>');
+        $('head').append('<script type="text/css">' + emojiCss + '</script>');
 
         // Create a button for inserting emojis
         var $btn = $('<button>')
