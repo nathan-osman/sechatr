@@ -257,6 +257,7 @@
                     $.each(emojiList, function() {
                         var t = this.text,
                             $emoji = $('<div>')
+                                .addClass('emoji')
                                 .addClass(this.name)
                                 .attr('title', this.name)
                                 .css('cursor', 'pointer')
@@ -289,8 +290,9 @@
                     m.index += m[1].length
                     $new.append(t(text.substring(0, m.index)));
                     if (emoji in emojiMap) {
-                        $new.append($('<img>')
-                            .attr('src', path(emojiMap[emoji]))
+                        $new.append($('<div>')
+                            .addClass('emoji')
+                            .addClass(emojiMap[emoji])
                             .css({margin: '-2px auto'}));
                     } else {
                         $new.append(t(emoji));
