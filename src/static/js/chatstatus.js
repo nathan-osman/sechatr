@@ -228,18 +228,19 @@
             '.emoji {' +
             '  background-image: url(https://' + preferences.get('server') + '/static/img/emojis.png);' +
             '  background-size: 240px 24px;' +
+            '  display: inline-block;' +
             '  height: 24px;' +
             '  width: 24px;' +
             '}' +
-            '.emoji.neutral { background-position: 24px 0; }' +
-            '.emoji.shock { background-position: 48px 0; }' +
-            '.emoji.smile { background-position: 72px 0; }' +
-            '.emoji.tongue { background-position: 96px 0; }' +
-            '.emoji.wink { background-position: 120px 0; }' +
-            '.emoji.sad { background-position: 144px 0; }' +
-            '.emoji.eyeroll { background-position: 168px 0; }' +
-            '.emoji.astonishment { background-position: 192px 0; }' +
-            '.emoji.nerd { background-position: 216px 0; }';
+            '.emoji.neutral { background-position: -24px 0; }' +
+            '.emoji.shock { background-position: -48px 0; }' +
+            '.emoji.smile { background-position: -72px 0; }' +
+            '.emoji.tongue { background-position: -96px 0; }' +
+            '.emoji.wink { background-position: -120px 0; }' +
+            '.emoji.sad { background-position: -144px 0; }' +
+            '.emoji.eyeroll { background-position: -168px 0; }' +
+            '.emoji.astonishment { background-position: -192px 0; }' +
+            '.emoji.nerd { background-position: -216px 0; }';
 
         // Inject the stylesheet
         $('head').append('<style>' + emojiCss + '</style>');
