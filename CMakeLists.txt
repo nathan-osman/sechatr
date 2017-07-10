@@ -3,7 +3,8 @@ project(sechatr)
 
 find_package(Qt5Network 5.4 REQUIRED)
 find_package(Qt5WebSockets 5.4 REQUIRED)
-find_package(QHttpEngine 1.0.0 REQUIRED)
+
+find_package(qhttpengine 1.0.0 REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)

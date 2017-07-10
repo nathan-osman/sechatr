@@ -51,7 +51,7 @@ bool HttpServer::listen(const QHostAddress &address, quint16 port)
     return mServer.listen(address, port);
 }
 
-void HttpServer::onStats(QHttpSocket *socket)
+void HttpServer::onStats(QHttpEngine::Socket *socket)
 {
     QSet<int> userIds;
 

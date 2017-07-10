@@ -28,11 +28,11 @@
 #include <QHostAddress>
 #include <QObject>
 
-#include <QHttpEngine/QFilesystemHandler>
-#include <QHttpEngine/QHttpServer>
-#include <QHttpEngine/QHttpSocket>
-#include <QHttpEngine/QObjectHandler>
-#include <QHttpEngine/QProxyHandler>
+#include <qhttpengine/filesystemhandler.h>
+#include <qhttpengine/server.h>
+#include <qhttpengine/socket.h>
+#include <qhttpengine/qobjecthandler.h>
+#include <qhttpengine/proxyhandler.h>
 
 #include "coordinator.h"
 
@@ -48,16 +48,16 @@ public:
 
 private slots:
 
-    void onStats(QHttpSocket *socket);
+    void onStats(QHttpEngine::Socket *socket);
 
 private:
 
     Coordinator *mCoordinator;
 
-    QHttpServer mServer;
-    QFilesystemHandler mFilesystemHandler;
-    QObjectHandler mApiHandler;
-    QProxyHandler mWebSocketProxy;
+    QHttpEngine::Server mServer;
+    QHttpEngine::FilesystemHandler mFilesystemHandler;
+    QHttpEngine::QObjectHandler mApiHandler;
+    QHttpEngine::ProxyHandler mWebSocketProxy;
 };
 
 #endif // HTTPSERVER_H
