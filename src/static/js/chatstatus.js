@@ -183,7 +183,7 @@
             },
             {
                 name: 'astonishment',
-                text: 'O_o'
+                text: 'O_O'
             },
             {
                 name: 'nerd',
@@ -192,7 +192,7 @@
         ];
 
         // Regexp to match against all recognized emojis
-        var emojiRegexp = /(\s|^)([(|)]-?[:;]|;-?[)p]|:-?[)|(dop]|ಠ_ಠ|o_o|\(⌐■_■\))(?=\s|$)/i;
+        var emojiRegexp = /(\s|^)([(|)]-?[:;]|;-?[)P]|:-?[)|(DOP]|ಠ_ಠ|O_O|\(⌐■_■\))(?=\s|$)/;
 
         // All valid emojis are listed in this map. The value for each key is
         // the image that should be used to replace it. Note that the '-'
@@ -201,7 +201,6 @@
             '(;': 'wink',
             ';)': 'wink',
             ';P': 'tongue',
-            ';p': 'tongue',
             '(:': 'smile',
             ':)': 'smile',
             '|:': 'neutral',
@@ -210,16 +209,11 @@
             ':(': 'sad',
             ':D': 'grin',
             ':O': 'shock',
-            ':o': 'shock',
             ':P': 'tongue',
-            ':p': 'tongue',
 
             // Unicode fun
             'ಠ_ಠ': 'eyeroll',
-            'o_o': 'astonishment',
             'O_O': 'astonishment',
-            'O_o': 'astonishment',
-            'o_O': 'astonishment',
             '(⌐■_■)': 'nerd'
         };
 
