@@ -13,9 +13,7 @@ The application requires the following:
 - C++ compiler with C++11 support
 - CMake 3.2+
 - Qt 5.4+
-- [QHttpEngine](https://github.com/nitroshare/qhttpengine) *
-
-Note that QHttpEngine 1.0.0 has not been released yet. You will need to build it from master.
+- [QHttpEngine](https://github.com/nitroshare/qhttpengine)
 
 Because the application uses CMake, building sechatr is quite straightforward:
 
