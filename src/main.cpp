@@ -29,6 +29,7 @@
 
 #include "coordinator.h"
 #include "httpserver.h"
+#include "pollmanager.h"
 #include "websocketserver.h"
 
 int main(int argc, char **argv)
@@ -39,11 +40,13 @@ int main(int argc, char **argv)
     // Create options for the application
     QCommandLineOption addrOption("addr", "address for HTTP server", "address", "0.0.0.0");
     QCommandLineOption portOption("port", "port for HTTP server", "port", "8000");
+    QCommandLineOption directoryOption("directory", "directory for storage", "directory", ".");
 
     // Create the command-line parser and add the options
     QCommandLineParser parser;
     parser.addOption(addrOption);
     parser.addOption(portOption);
+    parser.addOption(directoryOption);
     parser.addHelpOption();
 
     // Parse the options
@@ -55,6 +58,9 @@ int main(int argc, char **argv)
     if (parser.isSet("help")) {
         parser.showHelp();
     }
+
+    // Create the poll manager
+    PollManager pollManager(parser.value(directoryOption));
 
     // Create the local WebSocket server
     WebSocketServer webSocketServer(&coordinator);
