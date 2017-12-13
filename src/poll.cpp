@@ -22,13 +22,64 @@
  * IN THE SOFTWARE.
  */
 
+#include <QDir>
+#include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonParseError>
 #include <QJsonValue>
+#include <QUuid>
 #include <QVariant>
 
 #include "poll.h"
+
+Poll::Poll(const QString &directory, const QString &title, const QStringList &options)
+    : mInitialized(true),
+      mUuid(QUuid::createUuid().toString()),
+      mFilename(QDir(directory).absoluteFilePath(mUuid)),
+      mTitle(title),
+      mOptions(options)
+{
+}
+
+Poll::Poll(const QString &directory, const QString &uuid)
+    : mInitialized(false),
+      mUuid(uuid),
+      mFilename(QDir(directory).absoluteFilePath(mUuid))
+{
+    QFile file(mFilename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return;
+    }
+    QJsonParseError jsonError;
+    QJsonDocument document = QJsonDocument::fromJson(file.readAll(), &jsonError);
+    if (jsonError.error != QJsonParseError::NoError) {
+        return;
+    }
+    QJsonObject object = document.object();
+    mTitle   = object.value("title").toString();
+    mOptions = object.value("options").toVariant().toStringList();
+    mVotes   = object.value("votes").toVariant().toMap();
+    mInitialized = true;
+}
+
+Poll::~Poll()
+{
+    if (mInitialized) {
+        serialize();
+    }
+}
+
+bool Poll::isInitialized() const
+{
+    return mInitialized;
+}
+
+QString Poll::uuid() const
+{
+    return mUuid;
+}
 
 void Poll::setTitle(const QString &title)
 {
@@ -45,19 +96,15 @@ void Poll::addVote(int userId, int selection)
     mVotes.insert(QString::number(userId), selection);
 }
 
-QByteArray Poll::serialize() const
+void Poll::serialize() const
 {
-    return QJsonDocument(QJsonObject{
+    QFile file(mFilename);
+    if (!file.open(QIODevice::WriteOnly)) {
+        return;
+    }
+    file.write(QJsonDocument(QJsonObject{
         { "title", mTitle },
         { "options", QJsonValue::fromVariant(mOptions) },
         { "votes", QJsonValue::fromVariant(mVotes) }
-    }).toJson();
-}
-
-void Poll::deserialize(const QByteArray &data)
-{
-    QJsonObject object = QJsonDocument::fromJson(data).object();
-    mTitle = object.value("title").toString();
-    mOptions = object.value("options").toVariant().toStringList();
-    mVotes = object.value("votes").toVariant().toMap();
+    }).toJson());
 }

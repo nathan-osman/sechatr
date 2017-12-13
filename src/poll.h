@@ -34,14 +34,25 @@ class Poll
 {
 public:
 
+    Poll(const QString &directory, const QString &title, const QStringList &options);
+    Poll(const QString &directory, const QString &uuid);
+    ~Poll();
+
+    bool isInitialized() const;
+    QString uuid() const;
+
     void setTitle(const QString &title);
     void addOption(const QString &label);
     void addVote(int userId, int selection);
 
-    QByteArray serialize() const;
-    void deserialize(const QByteArray &data);
+    void serialize() const;
 
 private:
+
+    bool mInitialized;
+
+    QString mUuid;
+    QString mFilename;
 
     QString mTitle;
     QStringList mOptions;
