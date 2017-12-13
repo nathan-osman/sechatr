@@ -1,8 +1,15 @@
 set(SRC
+    client.h
     client.cpp
+    coordinator.h
     coordinator.cpp
+    httpserver.h
     httpserver.cpp
+    poll.h
+    poll.cpp
+    room.h
     room.cpp
+    websocketserver.h
     websocketserver.cpp
     main.cpp
     resources.qrc
