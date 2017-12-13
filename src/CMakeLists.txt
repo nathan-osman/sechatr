@@ -7,6 +7,8 @@ set(SRC
     httpserver.cpp
     poll.h
     poll.cpp
+    pollmanager.h
+    pollmanager.cpp
     room.h
     room.cpp
     websocketserver.h
