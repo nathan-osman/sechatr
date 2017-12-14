@@ -24,6 +24,7 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonValue>
 
 #include "client.h"
 
@@ -43,12 +44,12 @@ Client::~Client()
     mSocket->deleteLater();
 }
 
-void Client::sendMessage(Type type, int userId, int value)
+void Client::sendMessage(Type type, int userId, const QVariant &value)
 {
     QJsonObject object{
         {"type", typeToString(type)},
         {"user_id", userId},
-        {"value", value}
+        {"value", QJsonValue::fromVariant(value)}
     };
     mSocket->sendTextMessage(QJsonDocument(object).toJson());
 }
@@ -77,20 +78,22 @@ void Client::onTextMessageReceived(const QString &message)
 {
     QJsonObject object = QJsonDocument::fromJson(message.toUtf8()).object();
     Type type = stringToType(object.value("type").toString());
-    int value = object.value("value").toInt();
+    QVariant value = object.value("value").toVariant();
 
     switch (type) {
     case Ping:
         sendMessage(Pong);
         return;
     case Active:
-        mActive = static_cast<bool>(value);
+        mActive = value.toBool();
         break;
     case Position:
-        mLastMessageRead = value;
+        mLastMessageRead = value.toInt();
         break;
     case Typing:
-        mLastCharEntered = value;
+        mLastCharEntered = value.toInt();
+        break;
+    default:
         break;
     }
 
@@ -100,16 +103,20 @@ void Client::onTextMessageReceived(const QString &message)
 QString Client::typeToString(Type type) const
 {
     switch (type) {
-    case Active:
-        return "active";
-    case Pong:
-        return "pong";
-    case Position:
-        return "position";
     case Quit:
         return "quit";
+    case Pong:
+        return "pong";
+    case Message:
+        return "message";
+    case Active:
+        return "active";
+    case Position:
+        return "position";
     case Typing:
         return "typing";
+    case Vote:
+        return "vote";
     default:
         return "";
     }
@@ -117,13 +124,15 @@ QString Client::typeToString(Type type) const
 
 Client::Type Client::stringToType(const QString &string) const
 {
-    if (string == "active") {
-        return Active;
-    } else if (string == "ping") {
+    if (string == "ping") {
         return Ping;
+    } else if (string == "Active") {
+        return Active;
     } else if (string == "position") {
         return Position;
     } else if (string == "typing") {
         return Typing;
+    } else {
+        return Unknown;
     }
 }

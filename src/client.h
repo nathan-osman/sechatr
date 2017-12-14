@@ -26,6 +26,7 @@
 #define CLIENT_H
 
 #include <QObject>
+#include <QVariant>
 #include <QWebSocket>
 
 /**
@@ -38,18 +39,21 @@ class Client : public QObject
 public:
 
     enum Type {
-        Active,
+        Unknown,
+        Quit,
         Ping,
         Pong,
+        Message,
+        Active,
         Position,
-        Quit,
-        Typing
+        Typing,
+        Vote
     };
 
     Client(QWebSocket *socket, int userId);
     virtual ~Client();
 
-    void sendMessage(Type type, int userId = 0, int value = 0);
+    void sendMessage(Type type, int userId = 0, const QVariant &value = QVariant());
 
     int userId() const;
     bool isActive() const;
@@ -58,7 +62,7 @@ public:
 
 signals:
 
-    void messageReceived(Type type, int value);
+    void messageReceived(Type type, const QVariant &value);
     void disconnected();
 
 private slots:
@@ -71,6 +75,7 @@ private:
     Type stringToType(const QString &string) const;
 
     QWebSocket *mSocket;
+
     int mUserId;
     bool mActive;
     int mLastMessageRead;

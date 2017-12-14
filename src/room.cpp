@@ -56,7 +56,7 @@ int Room::roomId() const
     return mRoomId;
 }
 
-void Room::onMessageReceived(Client::Type type, int value)
+void Room::onMessageReceived(Client::Type type, const QVariant &value)
 {
     Client *client = qobject_cast<Client*>(sender());
 

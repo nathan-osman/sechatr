@@ -27,6 +27,7 @@
 
 #include <QList>
 #include <QObject>
+#include <QVariant>
 
 #include "client.h"
 
@@ -52,7 +53,7 @@ signals:
 
 private slots:
 
-    void onMessageReceived(Client::Type type, int value);
+    void onMessageReceived(Client::Type type, const QVariant &value);
     void onDisconnected();
 
 private:
